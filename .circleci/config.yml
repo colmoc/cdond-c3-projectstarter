@@ -2,6 +2,7 @@ version: 2.1
 commands:
   destroy_environment:
     steps:
+      - run: echo "destroy environment running"
       - run:
           name: Destroy environment
           when: on_fail
