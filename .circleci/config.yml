@@ -271,9 +271,10 @@ jobs:
             cd ..
             pwd
             ls -l
-            tar -C backend -czvf artifact.tar.gz .
+            tar -C backend -czvf /tmp/artifact.tar.gz .
             ls -l
-            aws s3 cp artifact.tar.gz s3://udapeople-8b022f5 --recursive
+            echo "starting copy to s3"
+            aws s3 cp /tmp/artifact.tar.gz s3://udapeople-8b022f5 --recursive
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat /tmp/inventory.txt
