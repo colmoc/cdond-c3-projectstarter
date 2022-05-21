@@ -267,12 +267,12 @@ jobs:
             ls -lart
             # Zip the directory
             tar -C backend -czvf artifact.tar.gz .
-            ls -lart
-            pwd
+            cp artifact.tar.gz .circleci/ansible/roles/deploy/files/
+            ls -l .circleci/ansible/roles/deploy/files/
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat /tmp/inventory.txt
-          #ansible-playbook -i inventory.txt deploy-backend.yml
+            ansible-playbook -i inventory.txt deploy-backend.yml
       # Here's where you will add some code to rollback on failure
   write-inventory:
     docker:
