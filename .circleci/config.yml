@@ -159,6 +159,7 @@ jobs:
       - run:
           name: Configure server using Ansible 'configure-server.yml'
           command: |
+            cat /tmp/inventory.txt
             cd .circleci/ansible
             ansible-playbook -i /tmp/inventory.txt configure-server.yml
           #  exit 1
