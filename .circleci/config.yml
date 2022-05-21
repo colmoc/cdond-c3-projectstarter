@@ -133,11 +133,11 @@ jobs:
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters "Name=tag:Project,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --output text >> inventory.txt
+              --output text >> cdond-c3-projectstarter/.circleci/ansible/inventory.txt
       - persist_to_workspace:
           root: ~/
           paths:
-            - project/.circleci/ansible/inventory.txt
+            - cdond-c3-projectstarter/.circleci/ansible/inventory.txt
       - destroy_environment
   configure-infrastructure:
     docker:
@@ -149,7 +149,6 @@ jobs:
       - attach_workspace:
           at: ~/
       - run: echo "inventory contents saved to persistent storage with backend ID..."
-      - run: cat ~/inventory.txt
       - run:
           name: Install dependencies
           command: |
@@ -163,7 +162,50 @@ jobs:
             ansible-playbook -i inventory.txt configure-server.yml
           #  exit 1
       # Here's where you will add some code to rollback on failure
-
+  run-migrations:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run:
+          name: Run migrations
+          command: |
+            cd backend
+            npm install
+            npm run migrations > migrations_dump.txt
+      - run:
+          name: Send migration results to kvdb
+          command: |
+            if grep -q "has been executed successfully." ~/cdond-c3-projectstarter/backend/migrations_dump.txt
+            then
+               curl https://kvdb.io/P6itoQuxnsx6qtXS1nSRyQ/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+            fi
+      # Here's where you will add some code to rollback on failure
+write-inventory:
+  docker:
+    - image: amazon/aws-cli
+  steps:
+    - checkout
+    - run:
+        name: Add back-end ip to ansible inventory
+        command: |
+          aws ec2 describe-instances \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --filters "Name=tag:Project,Values=backend-0640f33" \
+            --output text >> cdond-c3-projectstarter/.circleci/ansible/inventory.txt
+    - persist_to_workspace:
+        root: ~/
+        paths:
+          - cdond-c3-projectstarter/.circleci/ansible/inventory.txt
+retrieve-inventory:
+  docker:
+    - image: python:3.7-alpine3.11
+  steps:
+    - checkout
+    - attach_workspace:
+        at: ~/
+    - run: echo "inventory contents saved to persistent storage with backend ID..."
+    - run: cat inventory.txt
 workflows:
   default:
     jobs:
@@ -181,5 +223,8 @@ workflows:
       #         requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       #     - configure-infrastructure:
       #         requires: [deploy-infrastructure]
-      - deploy-infrastructure
-      - configure-infrastructure
+      #- deploy-infrastructure
+      #- configure-infrastructure
+      - write-inventory
+      - retrieve-inventory:
+          requires: [write-inventory]
