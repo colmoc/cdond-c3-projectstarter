@@ -185,7 +185,10 @@ jobs:
     docker:
       - image: amazon/aws-cli
     steps:
+      - run: pwd
+      - run: ls -l
       - checkout
+      - run: ls -l
       - run:
           name: Install tar utility
           command: |
@@ -207,10 +210,13 @@ jobs:
       - image: python:3.7-alpine3.11
     steps:
       - checkout
+      - run: pwd
+      - run: ls -l /tmp/
       - attach_workspace:
           at: /tmp
       - run: echo "inventory contents saved to persistent storage with backend ID..."
       - run: cat /tmp/inventory.txt
+      - run: ls -l /tmp/
 workflows:
   default:
     jobs:
