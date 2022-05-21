@@ -152,7 +152,9 @@ jobs:
           name: Install dependencies
           command: |
             apk add --update ansible
-            yum install -y tar gzip awscli
+            apk add --udpate tar
+            apk add --udpate gzip
+
           #  exit 1
       - run:
           name: Configure server using Ansible 'configure-server.yml'
