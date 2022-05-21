@@ -193,7 +193,7 @@ jobs:
       # Here's where you will add some code to rollback on failure
   deploy-frontend:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: circleci/node:13.8.0
     steps:
       - checkout
       - run:
@@ -209,6 +209,7 @@ jobs:
             && pip3 install --no-cache-dir \
                 awscli \
             && rm -rf /var/cache/apk/*
+
       # double check the above pip dependency is required!
       - attach_workspace:
           at: /tmp
@@ -231,8 +232,7 @@ jobs:
           name: Deploy frontend objects
           command: |
             cd frontend
-            apk add --update npm
-            npm install -g webpack
+            npm install
             npm run build
             tar -czvf artifact-8b022f5.tar.gz dist
             aws s3 cp dist s3://udapeople-8b022f5 --recursive
