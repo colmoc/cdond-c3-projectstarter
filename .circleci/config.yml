@@ -232,7 +232,7 @@ jobs:
           name: Deploy frontend objects
           command: |
             cd frontend
-            npm install
+            apk add --update npm
             npm install --save-dev webpack-cli
             npm run build
             tar -czvf artifact-8b022f5.tar.gz dist
