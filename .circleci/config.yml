@@ -193,17 +193,17 @@ jobs:
       # Here's where you will add some code to rollback on failure
   deploy-frontend:
     docker:
-      - image: amazon/aws-cli
+      - image: python:3.7-alpine3.11
     steps:
       - checkout
       - run:
-          name: Install tar gzip utility
+          name: Install tar gzip ansible utility
           command: |
-            yum install -y tar gzip
-      - run:
-          name: Install ansible
-          command: |
-            yum install -y ansible
+            apk add --update ansible
+            apk add --update tar
+            apk add --update gzip
+            apk add --no-cache aws-cli
+
       - attach_workspace:
           at: /tmp
       - run:
