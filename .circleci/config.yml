@@ -152,8 +152,8 @@ jobs:
           name: Install dependencies
           command: |
             apk add --update ansible
-            apk add --udpate tar
-            apk add --udpate gzip
+            apk add --update tar
+            apk add --update gzip
 
           #  exit 1
       - run:
