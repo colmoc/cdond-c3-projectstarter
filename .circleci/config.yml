@@ -214,7 +214,7 @@ jobs:
       - run:
           name: Get backend url
           command: |
-            cat /tmp/inventory.txt
+            ls -lrt /tmp/
             export BACKEND_IP=$(aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters "Name=tag:Name,Values=backend-8b022f5" \
