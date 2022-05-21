@@ -268,11 +268,11 @@ jobs:
             cd backend
             apk add --update npm
             npm install --save-dev webpack-cli
-            npm run build
             cd ..
             pwd
             ls -l
             tar -C backend -czvf artifact.tar.gz .
+            ls -l
             aws s3 cp artifact.tar.gz s3://udapeople-8b022f5 --recursive
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
