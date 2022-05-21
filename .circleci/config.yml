@@ -238,7 +238,10 @@ workflows:
       #     - configure-infrastructure:
       #         requires: [deploy-infrastructure]
       #- deploy-infrastructure
-      - configure-infrastructure
+      - write-inventory
+      - configure-infrastructure:
+          requires: [write-inventory]
+
       #- write-inventory
       #- retrieve-inventory:
       #    requires: [write-inventory]
