@@ -267,8 +267,7 @@ jobs:
             ls -lart
             # Zip the directory
             tar -C backend -czvf artifact.tar.gz .
-            cp artifact.tar.gz .circleci/ansible/roles/deploy/files/
-            ls -l .circleci/ansible/roles/deploy/files/
+            aws s3 cp artifact.tar.gz s3://udapeople-8b022f5 --recursive
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat /tmp/inventory.txt

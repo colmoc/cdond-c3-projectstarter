@@ -4,11 +4,19 @@
     path: /backend
     state: directory
 
-- name: Extract backend artifcat
+- name: Copy backend artifact
+  amazon.aws.aws_s3:
+    profile: public
+    bucket: s3://udapeople-8b022f5
+    mode: get
+    object: "artifact.tar.gz"
+    dest: "/backend/"
+
+- name: "install node exporter."
   unarchive:
-    src: "files/artifact.tar.gz"
-    dest: /backend
-    remote_src: yes
+    src: /backend/artifact.tar.gz
+    dest: /backend/
+    remote_src: no
 
 - name: Starting backend
   shell: |
