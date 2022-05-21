@@ -209,6 +209,7 @@ jobs:
             && pip3 install --no-cache-dir \
                 awscli \
             && rm -rf /var/cache/apk/*
+      # double check the above pip dependency is required!
       - attach_workspace:
           at: /tmp
       - run:
@@ -230,7 +231,7 @@ jobs:
           name: Deploy frontend objects
           command: |
             cd frontend
-            npm install
+            apk add --update npm
             npm run build
             tar -czvf artifact-8b022f5.tar.gz dist
             aws s3 cp dist s3://udapeople-8b022f5 --recursive
