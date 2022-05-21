@@ -202,8 +202,13 @@ jobs:
             apk add --update ansible
             apk add --update tar
             apk add --update gzip
-            apk add awscli
-
+            apk add --no-cache \
+                python3 \
+                py3-pip \
+            && pip3 install --upgrade pip \
+            && pip3 install --no-cache-dir \
+                awscli \
+            && rm -rf /var/cache/apk/*
       - attach_workspace:
           at: /tmp
       - run:
