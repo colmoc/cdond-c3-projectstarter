@@ -135,9 +135,9 @@ jobs:
               --filters "Name=tag:Project,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --output text >> .circleci/ansible/inventory.txt
       - persist_to_workspace:
-          root: ~/
+          root: .circleci/ansible/
           paths:
-            - cdond-c3-projectstarter/.circleci/ansible/inventory.txt
+            - inventory.txt
       - destroy_environment
   configure-infrastructure:
     docker:
@@ -147,8 +147,7 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["fb:02:ec:27:3b:20:71:6b:c6:a1:7c:bb:96:d6:bf:39"]
       - attach_workspace:
-          at: ~/
-      - run: echo "inventory contents saved to persistent storage with backend ID..."
+          at: /tmp
       - run:
           name: Install dependencies
           command: |
@@ -159,7 +158,7 @@ jobs:
           name: Configure server using Ansible 'configure-server.yml'
           command: |
             cd .circleci/ansible
-            ansible-playbook -i inventory.txt configure-server.yml
+            ansible-playbook -i /tmp/inventory.txt configure-server.yml
           #  exit 1
       # Here's where you will add some code to rollback on failure
   run-migrations:
@@ -176,9 +175,9 @@ jobs:
       - run:
           name: Send migration results to kvdb
           command: |
-            if grep -q "has been executed successfully." ~/cdond-c3-projectstarter/backend/migrations_dump.txt
+            if grep -q "has been executed successfully." migrations_dump.txt
             then
-               curl https://kvdb.io/P6itoQuxnsx6qtXS1nSRyQ/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+               curl https://kvdb.io/P6itoQuxnsx6qtXS1nSRyQ/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1' --insecure
             fi
       # Here's where you will add some code to rollback on failure
   write-inventory:
@@ -236,7 +235,7 @@ workflows:
       #     - configure-infrastructure:
       #         requires: [deploy-infrastructure]
       #- deploy-infrastructure
-      #- configure-infrastructure
-      - write-inventory
-      - retrieve-inventory:
-          requires: [write-inventory]
+      - configure-infrastructure
+      #- write-inventory
+      #- retrieve-inventory:
+      #    requires: [write-inventory]
