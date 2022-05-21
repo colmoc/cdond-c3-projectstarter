@@ -209,7 +209,7 @@ jobs:
       - attach_workspace:
           at: ~/
       - run: echo "inventory contents saved to persistent storage with backend ID..."
-      - run: cat inventory.txt
+      - run: cat .circleci/ansible/inventory.txt
 workflows:
   default:
     jobs:
