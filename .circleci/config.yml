@@ -192,11 +192,11 @@ jobs:
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters "Name=tag:Project,Values=backend-0640f33" \
-              --output text >> ~/cdond-c3-projectstarter/.circleci/ansible/inventory.txt
+              --output text >> .circleci/ansible/inventory.txt
       - persist_to_workspace:
           root: ~/
           paths:
-            - ~/cdond-c3-projectstarter/.circleci/ansible/inventory.txt
+            - .circleci/ansible/inventory.txt
   retrieve-inventory:
     docker:
       - image: python:3.7-alpine3.11
@@ -205,7 +205,7 @@ jobs:
       - attach_workspace:
           at: ~/
       - run: echo "inventory contents saved to persistent storage with backend ID..."
-      - run: cat inventory.txt
+      - run: cat .circleci/ansible/inventory.txt
 workflows:
   default:
     jobs:
