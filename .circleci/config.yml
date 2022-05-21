@@ -177,6 +177,7 @@ jobs:
           command: |
             cd backend
             npm install
+            touch migrations_dump.txt
             echo "has been executed successfully." > migrations_dump.txt
         #npm run migrations > migrations_dump.txt
       - run:
