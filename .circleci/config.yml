@@ -232,6 +232,7 @@ jobs:
           command: |
             cd frontend
             apk add --update npm
+            npm install -g webpack
             npm run build
             tar -czvf artifact-8b022f5.tar.gz dist
             aws s3 cp dist s3://udapeople-8b022f5 --recursive
