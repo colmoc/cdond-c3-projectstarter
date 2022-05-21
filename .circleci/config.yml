@@ -271,10 +271,7 @@ jobs:
             npm run build
             cd ..
             pwd
-            ls -lart
-      - run:
-          command: |
-            # Zip the directory
+            ls -l
             tar -C backend -czvf artifact.tar.gz .
             aws s3 cp artifact.tar.gz s3://udapeople-8b022f5 --recursive
             cd .circleci/ansible
