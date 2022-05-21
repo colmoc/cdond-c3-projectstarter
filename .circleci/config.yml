@@ -238,8 +238,41 @@ jobs:
             tar -czvf artifact-8b022f5.tar.gz dist
             aws s3 cp dist s3://udapeople-8b022f5 --recursive
       #REMOVE hardcoded valued above after testing!
+      # Here's where you will add some code to rollback on failure, reference destroy-
+      - destroy_environment
+  deploy-backend:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["fb:02:ec:27:3b:20:71:6b:c6:a1:7c:bb:96:d6:bf:39"]
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update ansible
+            apk add --update tar
+            apk add --update gzip
+      - run:
+          name: Deploy backend
+          command: |
+            cd backend
+            apk add --update npm
+            npm install --save-dev webpack-cli
+            npm run build
+            cd ..
+            pwd
+            ls -lart
+            # Zip the directory
+            tar -C backend -czvf artifact.tar.gz .
+            ls -lart
+            cd .circleci/ansible
+            echo "Contents  of the inventory.txt file is -------"
+            cat /tmp/inventory.txt
+          #ansible-playbook -i inventory.txt deploy-backend.yml
       # Here's where you will add some code to rollback on failure
-
   write-inventory:
     docker:
       - image: amazon/aws-cli
@@ -299,4 +332,7 @@ workflows:
       #     requires: [deploy-infrastructure]
       #- run-migrations
       #  requires: [configure-infrastructure]
-      - deploy-frontend
+      #- deploy-frontend
+      - write-inventory
+      - deploy-backend:
+          requires: [write-inventory]
