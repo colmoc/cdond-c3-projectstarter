@@ -133,7 +133,7 @@ jobs:
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters "Name=tag:Project,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --output text >> cdond-c3-projectstarter/.circleci/ansible/inventory.txt
+              --output text >> .circleci/ansible/inventory.txt
       - persist_to_workspace:
           root: ~/
           paths:
@@ -186,9 +186,9 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - run: pwd
-      - run: ls -l
+      - run: ls -la
       - checkout
-      - run: ls -l
+      - run: ls -la
       - run:
           name: Install tar utility
           command: |
@@ -215,8 +215,9 @@ jobs:
       - attach_workspace:
           at: /tmp
       - run: echo "inventory contents saved to persistent storage with backend ID..."
+      - run: pwd
       - run: cat /tmp/inventory.txt
-      - run: ls -l /tmp/
+      - run: ls -la /tmp/
 workflows:
   default:
     jobs:
