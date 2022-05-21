@@ -198,9 +198,9 @@ jobs:
               --filters "Name=tag:Project,Values=backend-0640f33" \
               --output text >> .circleci/ansible/inventory.txt
       - persist_to_workspace:
-          root: ~/
+          root: .circleci/ansible/
           paths:
-            - .circleci/ansible/inventory.txt
+            - inventory.txt
   retrieve-inventory:
     docker:
       - image: python:3.7-alpine3.11
@@ -213,7 +213,7 @@ jobs:
       - attach_workspace:
           at: ~/
       - run: echo "inventory contents saved to persistent storage with backend ID..."
-      - run: cat .circleci/ansible/inventory.txt
+      - run: cat inventory.txt
 workflows:
   default:
     jobs:
