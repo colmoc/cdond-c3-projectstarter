@@ -179,6 +179,9 @@ jobs:
             npm install
             touch migrations_dump.txt
             echo "has been executed successfully." > migrations_dump.txt
+            cat migrations_dump.txt
+            pwd
+            ls -lart
         #npm run migrations > migrations_dump.txt
       - run:
           name: Send migration results to kvdb
