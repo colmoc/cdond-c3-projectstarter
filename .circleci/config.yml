@@ -290,8 +290,9 @@ jobs:
           command: |
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:Name,Values=backend-0640f33" \
+              --filters "Name=tag:Name,Values=backend-8b022f5" \
               --output text >> .circleci/ansible/inventory.txt
+      #update this to workflowid after testing complete
       - run: cat .circleci/ansible/inventory.txt
       - persist_to_workspace:
           root: .circleci/ansible/
