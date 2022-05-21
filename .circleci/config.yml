@@ -187,6 +187,10 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install tar utility
+          command: |
+            yum install -y tar gzip
+      - run:
           name: Add back-end ip to ansible inventory
           command: |
             aws ec2 describe-instances \
@@ -202,6 +206,10 @@ jobs:
       - image: python:3.7-alpine3.11
     steps:
       - checkout
+      - run:
+          name: Install tar utility
+          command: |
+            yum install -y tar gzip
       - attach_workspace:
           at: ~/
       - run: echo "inventory contents saved to persistent storage with backend ID..."
