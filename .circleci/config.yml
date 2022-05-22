@@ -304,12 +304,6 @@ jobs:
       - attach_workspace:
           at: /tmp
       - run:
-          name: Get backend url
-          command: |
-            # your code here
-        # remove above hardcoded value after testing
-
-      - run:
           name: Backend smoke test.
           command: |
             ls -lrt /tmp/
@@ -317,10 +311,6 @@ jobs:
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters "Name=tag:Name,Values=backend-8b022f5" \
               --output text)
-            export API_URL="http://${BACKEND_IP}:3030"
-            echo "API_URL = ${API_URL}"
-            echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
-            cat frontend/.env
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
             curl "${API_URL}/api/status"
@@ -333,7 +323,15 @@ jobs:
       - run:
           name: Frontend smoke test.
           command: |
-            # your code here
+            URL="http://udapeople-8b022f5.s3-website-us-east-1.amazonaws.com/#/employees"            
+            echo ${URL} 
+            if curl -s ${URL} | grep "Welcome"
+            then
+                # Change this to 0 after the job fails
+              return 1
+            else
+              return 0
+            fi
       # Here's where you will add some code to rollback on failure
 
   write-inventory:
