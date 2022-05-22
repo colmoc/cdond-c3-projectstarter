@@ -177,12 +177,12 @@ jobs:
           command: |
             cd backend
             npm install
-            touch migrations_dump.txt
-            echo "has been executed successfully." > migrations_dump.txt
+            npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
             pwd
             ls -lart
-        #npm run migrations > migrations_dump.txt
+        #touch migrations_dump.txt
+        #echo "has been executed successfully." > migrations_dump.txt
       - run:
           name: Send migration results to kvdb
           command: |
@@ -328,7 +328,7 @@ jobs:
             if curl -s ${URL} | grep "Welcome"
             then
                 # Change this to 0 after the job fails
-              return 1
+              return 0
             else
               return 1
             fi
@@ -393,10 +393,10 @@ workflows:
       #- deploy-infrastructure
       # - configure-infrastructure:
       #     requires: [deploy-infrastructure]
-      #- run-migrations
+      - run-migrations
       #  requires: [configure-infrastructure]
       #- deploy-frontend
       #- write-inventory
       #- deploy-backend:
       #    requires: [write-inventory]
-      - smoke-test
+      #- smoke-test
