@@ -4,8 +4,17 @@
     path: /backend
     state: directory
 
+## move below out of playbook
+- name: download install s3 module
+  shell: |
+    ansible-galaxy collection install amazon.aws
+
+- name: "wait 5 seconds for install to complete."
+  wait_for:
+    timeout: 5
+
 - name: Copy backend artifact
-  amazon.aws.aws_s3:
+  amazon.aws.s3_bucket:
     profile: public
     bucket: s3://udapeople-8b022f5
     mode: get
