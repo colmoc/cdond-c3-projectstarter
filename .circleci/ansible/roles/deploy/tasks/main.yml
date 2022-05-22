@@ -1,4 +1,11 @@
-## Deployment playbook goes here.
+## remove this first play
+- name: "install dependencies."
+  become: yes
+  apt:
+    name: ["tar", "gzip"]
+    state: latest
+    update_cache: yes
+
 - name: Create directory
   file:
     path: ~/backend
