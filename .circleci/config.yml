@@ -421,4 +421,4 @@ workflows:
       #- deploy-backend:
       #    requires: [write-inventory]
       - smoke-test:
-          requires: [run-migrations]
+          requires: [deploy-infrastructure]
