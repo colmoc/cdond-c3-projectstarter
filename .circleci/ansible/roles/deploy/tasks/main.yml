@@ -1,10 +1,25 @@
-## remove this first play
+## remove these dependencies plays and place in other yml
 - name: "install dependencies."
   become: yes
   apt:
-    name: ["tar", "gzip"]
+    name: ["tar", "gzip", "npm"]
     state: latest
     update_cache: yes
+
+- name: "install dependencies 2."
+  become: yes
+  apt:
+    name: ["nodejs", "npm", "python3"]
+    state: latest
+    update_cache: yes
+
+- name: "install pm2"
+  become: yes
+  npm:
+    name: pm2
+    global: yes
+    production: yes
+    state: present
 
 - name: Create directory
   file:
@@ -12,14 +27,14 @@
     state: directory
 
 - name: Copy artifact to /backend
-  template:
+  copy:
     src: "files/artifact.tar.gz"
-    dest: "~/backend/"
+    dest: ~/backend
 
 - name: "extract"
-  unarchive:
-    src: ~/backend/artifact.tar.gz
-    dest: ~/backend/
+  shell: |
+    cd backend
+    tar -xzvf artifact.tar.gz
 
 - name: Starting backend
   shell: |
