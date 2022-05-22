@@ -271,15 +271,15 @@ jobs:
             cd ..
             pwd
             ls -l
-            tar -C backend -czvf /tmp/artifact.tar.gz .
-            ls -l
-            echo "starting copy to s3"
-            aws s3 cp /tmp/artifact.tar.gz s3://udapeople-8b022f5
+            tar -C backend -czvf .circleci/ansible/roles/deploy/files/artifact.tar.gz .
+            ls -l .circleci/ansible/roles/deploy/files/
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat /tmp/inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
       # Here's where you will add some code to rollback on failure
+      #   echo "starting copy to s3"
+      #   aws s3 cp /tmp/artifact.tar.gz s3://udapeople-8b022f5
   write-inventory:
     docker:
       - image: amazon/aws-cli
