@@ -306,6 +306,12 @@ jobs:
       - run:
           name: Get backend url
           command: |
+            # your code here
+        # remove above hardcoded value after testing
+
+      - run:
+          name: Backend smoke test.
+          command: |
             ls -lrt /tmp/
             export BACKEND_IP=$(aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
@@ -315,13 +321,6 @@ jobs:
             echo "API_URL = ${API_URL}"
             echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
             cat frontend/.env
-            export API_URL="http://${BACKEND_IP}:3030"
-            echo "${API_URL}"
-        # remove above hardcoded value after testing
-
-      - run:
-          name: Backend smoke test.
-          command: |
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
             curl "${API_URL}/api/status"
