@@ -363,7 +363,7 @@ jobs:
             aws cloudformation deploy \
             --template-file .circleci/files/cloudfront.yml \
             --stack-name InitialStack \
-            --parameter-overrides WorkflowID="udapeople-dfa3709" \
+            --parameter-overrides WorkflowID="dfa3709" \
             --tags project=udapeople
       # Here's where you will add some code to rollback on failure
   write-inventory:
