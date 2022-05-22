@@ -173,16 +173,13 @@ jobs:
             apk add --update ansible
             apk add --update tar
             apk add --update gzip
-
-          #  exit 1
       - run:
           name: Configure server using Ansible 'configure-server.yml'
           command: |
             cat /tmp/inventory.txt
             cd .circleci/ansible
             ansible-playbook -i /tmp/inventory.txt configure-server.yml
-          #  exit 1
-      # Here's where you will add some code to rollback on failure
+      - destroy_environment
   run-migrations:
     docker:
       - image: circleci/node:13.8.0
@@ -208,7 +205,8 @@ jobs:
             then
                curl https://kvdb.io/P6itoQuxnsx6qtXS1nSRyQ/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1' --insecure
             fi
-      # Here's where you will add some code to rollback on failure
+      - revert-migrations:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
   deploy-frontend:
     docker:
       - image: python:3.7-alpine3.11
@@ -245,7 +243,7 @@ jobs:
             cat frontend/.env
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
-      # Update the hardcoded value to workflow ID after testing above!
+
       - run:
           name: Deploy frontend objects
           command: |
@@ -255,8 +253,6 @@ jobs:
             npm run build
             tar -czvf artifact-${CIRCLE_WORKFLOW_ID:0:7}.tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-      #REMOVE hardcoded valued above after testing!
-      # Here's where you will add some code to rollback on failure, reference destroy-
       - destroy_environment
   deploy-backend:
     docker:
@@ -295,9 +291,7 @@ jobs:
             echo "Contents  of the inventory.txt file is -------"
             cat /tmp/inventory.txt
             ansible-playbook -i /tmp/inventory.txt deploy-backend.yml
-      # Here's where you will add some code to rollback on failure
-      #   echo "starting copy to s3"
-      #   aws s3 cp /tmp/artifact.tar.gz s3://udapeople-8b022f5
+      - destroy_environment
   smoke-test:
     docker:
       - image: python:3.7-alpine3.11
@@ -374,7 +368,6 @@ jobs:
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --output text >> .circleci/ansible/inventory.txt
-      #update this to workflowid after testing complete
       - run: cat .circleci/ansible/inventory.txt
       - persist_to_workspace:
           root: .circleci/ansible/
