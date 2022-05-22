@@ -318,6 +318,7 @@ jobs:
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
         # remove above hardcoded value after testing
+
       - run:
           name: Backend smoke test.
           command: |
