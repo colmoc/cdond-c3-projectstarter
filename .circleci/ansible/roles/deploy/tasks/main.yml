@@ -1,18 +1,18 @@
 ## Deployment playbook goes here.
 - name: Create directory
   file:
-    path: /backend
+    path: ~/backend
     state: directory
 
 - name: Copy artifact to /backend
   template:
     src: "files/artifact.tar.gz"
-    dest: "/backend/"
+    dest: "~/backend/"
 
 - name: "extract"
   unarchive:
-    src: /backend/artifact.tar.gz
-    dest: /backend/
+    src: ~/backend/artifact.tar.gz
+    dest: ~/backend/
 
 - name: Starting backend
   shell: |
