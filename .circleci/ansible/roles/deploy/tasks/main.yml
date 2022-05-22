@@ -38,6 +38,8 @@
 
 - name: Starting backend
   shell: |
+    cd backend
     npm install
     pm2 stop default
-    npm run start
+    pm2 start npm -- start
+  #npm run start
