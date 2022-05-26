@@ -250,11 +250,12 @@ jobs:
           command: |
             cd frontend
             apk add --update npm
-            npm install --save-dev webpack-cli
+            npm install
             npm run build
             tar -czvf artifact-${CIRCLE_WORKFLOW_ID:0:7}.tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - destroy_environment
+      # npm install --save-dev webpack-cli
   deploy-backend:
     docker:
       - image: python:3.7-alpine3.11
@@ -282,7 +283,7 @@ jobs:
           command: |
             cd backend
             apk add --update npm
-            npm install --save-dev webpack-cli
+            npm install
             cd ..
             pwd
             ls -l
@@ -293,6 +294,7 @@ jobs:
             cat /tmp/inventory.txt
             ansible-playbook -i /tmp/inventory.txt deploy-backend.yml
       - destroy_environment
+    #npm install --save-dev webpack-cli
   smoke-test:
     docker:
       - image: python:3.7-alpine3.11
