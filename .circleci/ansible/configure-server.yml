@@ -33,4 +33,4 @@
 
   roles:
     - setup
-    #- configure-prometheus-node-exporter
+    - configure-prometheus-node-exporter
